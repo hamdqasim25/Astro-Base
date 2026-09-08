@@ -26,7 +26,7 @@ The goal is to create something that works both as a **quick reference tool** an
 
 ---
 
-## Tech Stack
+## ⚙️ Tech Stack
 
 - **Frontend / Full Stack Framework:** Next.js
 - **Language:** TypeScript
