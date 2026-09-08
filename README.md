@@ -26,6 +26,20 @@ The goal is to create something that works both as a **quick reference tool** an
 
 ---
 
+## Tech Stack
+
+- **Frontend / Full Stack Framework:** Next.js
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS
+- **Database:** PostgreSQL
+- **ORM / Database Toolkit:** Prisma
+- **Runtime:** Node.js
+- **Package Manager:** npm
+- **Version Control:** Git & GitHub
+- **Development Environment:** Visual Studio Code
+
+---
+
 ## 💻 Initial Command Libraries
 
 AstroBase will initially contain three main command libraries:
