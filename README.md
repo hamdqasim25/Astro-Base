@@ -243,7 +243,7 @@ AstroBase may eventually expand beyond command references into:
 
 ## 🛠️ Development Status
 
-AstroBase is currently in the **planning and initial development stage**.
+AstroBase is currently in the **application foundation and command knowledge base stage**.
 
 ### Completed
 
@@ -256,24 +256,49 @@ AstroBase is currently in the **planning and initial development stage**.
 - Syntax colour legend planned
 - Expected command output examples added as a core requirement
 - Initial future feature roadmap
+- GitHub repository created and project connected to version control
+- Next.js application created with TypeScript and Tailwind CSS
+- Initial application structure created
+- AstroBase landing page designed and implemented
+- Command library page created
+- Central filter configuration created for environments, categories, and difficulty levels
+- Central command data structure created
+- Environment filtering implemented for CMD, PowerShell, and Bash
+- Category filtering implemented
+- Commands can belong to multiple categories
+- Difficulty filtering implemented as a secondary filter
+- Dynamic routing implemented for individual command pages
+- Reusable command page layout created
+- `ping` created as the first complete command reference
+- Syntax colour coding implemented
+- Syntax colour legend implemented
+- Command options and flags section implemented
+- Practical command examples implemented
+- Expected output examples implemented
+- Output explanations implemented
+- Related command navigation implemented
+- Command page layout redesigned for compact, quick-reference use
 
 ### Currently Working On
 
-- Setting up the GitHub repository
-- Planning the application structure
-- Defining the initial command data structure
-- Designing the AstroBase interface
+- Expanding the initial command knowledge base
+- Refining the reusable command page structure
+- Preparing the command library search functionality
+- Improving navigation between command pages and filters
 
 ### Next
 
-- Set up the web application
-- Create the initial project structure
-- Build the main AstroBase landing page
-- Create the command library interface
-- Build the reusable command page layout
-- Implement syntax highlighting
-- Implement command search
-- Begin adding the first CMD, PowerShell, and Bash commands
+- Implement functional command search
+- Add full command data for `ipconfig`
+- Add full command data for `tracert`
+- Add full command data for `Get-Process`
+- Add full command data for `ls`
+- Add full command data for `chmod`
+- Continue adding CMD, PowerShell, and Bash commands
+- Refactor repeated interface elements into reusable components
+- Continue improving responsive design and accessibility
+- Review and refine command data structure as the library grows
+- Begin planning persistent data storage when required
 
 ---
 
