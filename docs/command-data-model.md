@@ -57,7 +57,7 @@ Command listing pages will initially display only:
 - Category
 - Description
 
-When a user selects a command, the full command object will be used to display its syntax, parameters, practical examples, expected output, output explanations, and related commands.
+When a user selects a command, the full command object will display its syntax, parameters, practical examples, expected output, output explanations, and related commands.
 
 ### Storage Structure
 
