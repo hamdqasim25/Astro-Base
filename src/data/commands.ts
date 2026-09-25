@@ -34,7 +34,7 @@ export type CommandExample = {
   title: string;
   description: string;
   command: SyntaxToken[];
-  output: string;
+  output?: string;
   outputExplanation?: OutputExplanation[];
 };
 
@@ -294,6 +294,229 @@ Ping statistics for 142.250.187.206:
     environment: "cmd",
     categories: ["networking", "troubleshooting"],
     difficulty: "beginner",
+
+    details: {
+      overview:
+        "ipconfig displays and manages TCP/IP configuration for Windows network adapters. Use it to find your IPv4 address, subnet mask and default gateway when investigating connectivity problems. The /all option also shows DNS and DHCP information. Other options refresh DHCP configuration or clear the local DNS resolver cache. Run ipconfig alone for a basic summary, or add an option from the list below; square brackets in the syntax mean the option is optional. Outputs here are abbreviated, illustrative examples using private addresses and an invented computer name and MAC address. Your adapter names and values will differ.",
+
+      syntax: [
+        { text: "ipconfig", type: "command" },
+        { text: " ", type: "plain" },
+        { text: "[option]", type: "option" },
+      ],
+
+      options: [
+        {
+          option: "/all",
+          description:
+            "Show detailed configuration for every adapter, including its MAC address, DHCP settings and DNS servers.",
+          example: "ipconfig /all",
+        },
+        {
+          option: "/release [adapter]",
+          description:
+            "Release DHCP-assigned IPv4 configuration. This interrupts IPv4 connectivity on affected adapters until configuration is obtained again. Omit the adapter to target all eligible adapters; supply its name to limit the operation. Quote names containing spaces. This does not release a manually configured static address.",
+          example: 'ipconfig /release "Ethernet"',
+        },
+        {
+          option: "/renew [adapter]",
+          description:
+            "Request renewed IPv4 configuration from DHCP for automatically configured adapters. Omit the adapter to target all eligible adapters, or provide its name. A reachable DHCP server is needed for a successful lease; renewal does not guarantee a different address.",
+          example: 'ipconfig /renew "Ethernet"',
+        },
+        {
+          option: "/flushdns",
+          description:
+            "Clear dynamically cached DNS answers, including cached failures, from the Windows resolver cache. Useful after a DNS change; it does not change your configured DNS servers.",
+          example: "ipconfig /flushdns",
+        },
+        {
+          option: "/displaydns",
+          description:
+            "Inspect the local DNS resolver cache, including cached answers and entries loaded from the Hosts file. This displays cached information rather than performing a fresh DNS lookup.",
+          example: "ipconfig /displaydns",
+        },
+      ],
+
+      examples: [
+        {
+          title: "Find your address and default gateway",
+          description:
+            "Run ipconfig before testing connectivity to check which IPv4 settings Windows is using. This abbreviated example shows one connected Ethernet adapter; a computer may also list Wi-Fi, VPN or disconnected adapters.",
+          command: [{ text: "ipconfig", type: "command" }],
+          output: `Windows IP Configuration
+
+Ethernet adapter Ethernet:
+
+   Connection-specific DNS Suffix  . :
+   IPv4 Address. . . . . . . . . . . : 192.168.10.25
+   Subnet Mask . . . . . . . . . . . : 255.255.255.0
+   Default Gateway . . . . . . . . . : 192.168.10.1`,
+          outputExplanation: [
+            {
+              label: "Ethernet adapter Ethernet",
+              description:
+                "The heading identifies the adapter whose settings follow. Check the adapter used for the connection you are troubleshooting.",
+            },
+            {
+              label: "IPv4 Address",
+              description:
+                "192.168.10.25 is this adapter's address on the example private network, not its public internet address.",
+            },
+            {
+              label: "Subnet Mask",
+              description:
+                "255.255.255.0 corresponds to /24. Together with the address, it identifies the local subnet as 192.168.10.0/24.",
+            },
+            {
+              label: "Default Gateway",
+              description:
+                "192.168.10.1 is the router used for destinations without a more specific route, commonly including internet destinations. Its presence alone does not prove internet access works.",
+            },
+          ],
+        },
+        {
+          title: "Inspect DNS and DHCP settings",
+          description:
+            "Use /all when a support technician needs more than the basic address summary. These selected lines show an adapter using DHCP and a local router providing both DHCP and DNS services.",
+          command: [
+            { text: "ipconfig", type: "command" },
+            { text: " ", type: "plain" },
+            { text: "/all", type: "option" },
+          ],
+          output: `Windows IP Configuration
+
+   Host Name . . . . . . . . . . . . : TRAINING-PC
+
+Ethernet adapter Ethernet:
+
+   Physical Address. . . . . . . . . : 02-00-00-00-00-25
+   DHCP Enabled. . . . . . . . . . . : Yes
+   IPv4 Address. . . . . . . . . . . : 192.168.10.25(Preferred)
+   Subnet Mask . . . . . . . . . . . : 255.255.255.0
+   Default Gateway . . . . . . . . . : 192.168.10.1
+   DHCP Server . . . . . . . . . . . : 192.168.10.1
+   DNS Servers . . . . . . . . . . . : 192.168.10.1`,
+          outputExplanation: [
+            {
+              label: "Host Name",
+              description:
+                "TRAINING-PC is the illustrative Windows computer name. It is separate from the adapter name Ethernet.",
+            },
+            {
+              label: "Physical Address",
+              description:
+                "The adapter's MAC address identifies its interface on the local network. It is different from an IP address; the value shown here is invented.",
+            },
+            {
+              label: "DHCP Enabled",
+              description:
+                "Yes means the adapter is configured to obtain IPv4 settings automatically. This setting alone does not prove that a DHCP lease was obtained successfully.",
+            },
+            {
+              label: "DHCP Server",
+              description:
+                "The server that supplied the displayed DHCP lease. In this example the router performs that role.",
+            },
+            {
+              label: "DNS Servers",
+              description:
+                "The resolver addresses configured for this adapter, used to look up names. Windows can list multiple servers; this example uses the router as its resolver.",
+            },
+          ],
+        },
+        {
+          title: "Clear cached DNS answers",
+          description:
+            "Use /flushdns when a stale answer or cached lookup failure may be affecting name resolution. Run Command Prompt as administrator for this troubleshooting action. Clearing the cache does not repair an unreachable DNS server or guarantee that a website will load.",
+          command: [
+            { text: "ipconfig", type: "command" },
+            { text: " ", type: "plain" },
+            { text: "/flushdns", type: "option" },
+          ],
+          output: `Windows IP Configuration
+
+Successfully flushed the DNS Resolver Cache.`,
+          outputExplanation: [
+            {
+              label: "Successfully flushed the DNS Resolver Cache",
+              description:
+                "Windows cleared its dynamic resolver cache entries. Retry the affected name lookup or connection; this message does not confirm that the next lookup will succeed.",
+            },
+          ],
+        },
+        {
+          title: "Release DHCP-assigned IPv4 configuration",
+          description:
+            "Use /release only when deliberately resetting DHCP configuration. Without an adapter name it affects all eligible adapters and can disconnect a remote support session. Plan to run /renew afterwards; releasing is not required for every renewal. This abbreviated example shows the released IPv4 fields for one adapter. IPv6 lines may still appear.",
+          command: [
+            { text: "ipconfig", type: "command" },
+            { text: " ", type: "plain" },
+            { text: "/release", type: "option" },
+          ],
+          output: `Windows IP Configuration
+
+Ethernet adapter Ethernet:
+
+   Connection-specific DNS Suffix  . :
+   Default Gateway . . . . . . . . . :`,
+          outputExplanation: [
+            {
+              label: "Default Gateway",
+              description:
+                "The blank field and missing IPv4 Address line reflect the released IPv4 configuration in this example. The adapter cannot use its previous DHCP address for IPv4 communication until it obtains configuration again.",
+            },
+          ],
+        },
+        {
+          title: "Obtain or renew a DHCP lease",
+          description:
+            "Run /renew to refresh DHCP configuration, including after the preceding release example. These selected lines illustrate a successful renewal. Windows may receive the same address again. If the DHCP server cannot be reached, renewal may time out instead of producing this result.",
+          command: [
+            { text: "ipconfig", type: "command" },
+            { text: " ", type: "plain" },
+            { text: "/renew", type: "option" },
+          ],
+          output: `Windows IP Configuration
+
+Ethernet adapter Ethernet:
+
+   Connection-specific DNS Suffix  . :
+   IPv4 Address. . . . . . . . . . . : 192.168.10.25
+   Subnet Mask . . . . . . . . . . . : 255.255.255.0
+   Default Gateway . . . . . . . . . : 192.168.10.1`,
+          outputExplanation: [
+            {
+              label: "IPv4 Address",
+              description:
+                "The adapter has an IPv4 address again after this successful renewal. Compare it with the expected subnet for the network.",
+            },
+            {
+              label: "Default Gateway",
+              description:
+                "The router address is present again. You can now use ping to test reachability; a renewed lease alone does not prove that every network service works.",
+            },
+          ],
+        },
+      ],
+
+      relatedCommands: [
+        {
+          name: "ping",
+          environment: "cmd",
+          slug: "ping",
+          description:
+            "Test reachability after checking your adapter's IP configuration.",
+        },
+        {
+          name: "tracert",
+          environment: "cmd",
+          slug: "tracert",
+          description:
+            "Investigate the route towards a destination when connectivity problems remain.",
+        },
+      ],
+    },
   },
 
   {
@@ -336,3 +559,9 @@ Ping statistics for 142.250.187.206:
     difficulty: "intermediate",
   },
 ];
+
+export function getCommand(environment: string, slug: string): Command | undefined {
+  return commands.find(
+    (command) => command.environment === environment && command.slug === slug,
+  );
+}
