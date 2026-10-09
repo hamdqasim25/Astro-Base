@@ -13,7 +13,7 @@ export default function BrowseMenu() {
   useEffect(() => {
     if (!open) return;
 
-    function dismissOutside(event: PointerEvent) {
+    function dismissOutside(event: PointerEvent | FocusEvent) {
       if (event.target instanceof Node && !containerRef.current?.contains(event.target)) {
         setOpen(false);
       }
@@ -28,9 +28,13 @@ export default function BrowseMenu() {
     }
 
     document.addEventListener("pointerdown", dismissOutside);
+    // Dismiss only when focus reaches an outside element. A blur with no
+    // related target can occur during a tap and must not cancel its click.
+    document.addEventListener("focusin", dismissOutside);
     document.addEventListener("keydown", dismissEscape);
     return () => {
       document.removeEventListener("pointerdown", dismissOutside);
+      document.removeEventListener("focusin", dismissOutside);
       document.removeEventListener("keydown", dismissEscape);
     };
   }, [open]);
@@ -46,9 +50,6 @@ export default function BrowseMenu() {
     <div
       ref={containerRef}
       className="shrink-0"
-      onBlur={(event) => {
-        if (!event.currentTarget.contains(event.relatedTarget)) setOpen(false);
-      }}
     >
       <button
         ref={buttonRef}
@@ -56,7 +57,7 @@ export default function BrowseMenu() {
         aria-expanded={open}
         aria-controls="browse-links"
         className="border-2 border-[#132238] bg-[#fff4a8] px-3 py-2 text-sm font-black shadow-[2px_2px_0_#132238] hover:bg-[#ffcf70]"
-        onClick={() => setOpen(!open)}
+        onClick={() => setOpen((wasOpen) => !wasOpen)}
         onKeyDown={(event) => {
           if (event.key === "ArrowDown" || event.key === "ArrowUp") {
             event.preventDefault();
