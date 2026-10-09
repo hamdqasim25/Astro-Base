@@ -89,38 +89,7 @@ const popularCommands = [
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-[#dff3ff] text-[#132238]">
-      {/* Navigation */}
-      <header className="border-b-2 border-[#132238] bg-[#dff3ff]">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <Link href="/" className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-[#132238] bg-[#ffcf70] font-black">
-              A
-            </div>
-
-            <span className="text-xl font-black tracking-tight">
-              AstroBase
-            </span>
-          </Link>
-
-          <nav className="hidden items-center gap-8 text-sm font-semibold md:flex">
-            <Link
-              href="/commands"
-              className="transition hover:text-[#2457d6]"
-            >
-              Commands
-            </Link>
-
-            <Link
-              href="/about"
-              className="transition hover:text-[#2457d6]"
-            >
-              About
-            </Link>
-          </nav>
-        </div>
-      </header>
-
+    <main className="flex-1 bg-[#dff3ff] text-[#132238]">
       {/* Hero */}
       <section className="relative overflow-hidden border-b-2 border-[#132238]">
         {/* Blueprint grid */}
@@ -133,10 +102,10 @@ export default function Home() {
           }}
         />
 
-        <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-6 py-12 lg:grid-cols-[1.15fr_0.85fr] lg:py-14">
+        <div className="relative mx-auto grid max-w-7xl items-start gap-6 px-6 py-6 sm:py-8 lg:grid-cols-[1.15fr_0.85fr] lg:gap-10">
           {/* Left side */}
           <div>
-            <div className="mb-5 inline-flex border-2 border-[#132238] bg-white px-3 py-1 text-xs font-bold uppercase tracking-[0.18em]">
+            <div className="mb-4 inline-flex border-2 border-[#132238] bg-white px-3 py-1 text-xs font-bold uppercase tracking-[0.18em]">
               IT Command Knowledge Base
             </div>
 
@@ -147,85 +116,11 @@ export default function Home() {
               </span>
             </h1>
 
-            <p className="mt-5 max-w-2xl text-base leading-7 text-[#40566f] lg:text-lg">
+            <p className="mt-4 max-w-2xl text-base leading-7 text-[#40566f] lg:text-lg">
               AstroBase breaks down Windows CMD, PowerShell and Linux commands
               with syntax, real examples, expected output and practical
               explanations.
             </p>
-
-            {/* Search area */}
-            <div className="mt-7 max-w-2xl">
-              <label htmlFor="command-search" className="mb-2 block text-xs font-black uppercase tracking-[0.18em] text-[#59728c]">
-                Find a command
-              </label>
-
-              <form action="/commands" method="get" role="search" className="flex flex-col border-2 border-[#132238] bg-white shadow-[4px_4px_0_#132238] sm:flex-row">
-                <input
-                  id="command-search"
-                  name="q"
-                  type="search"
-                  placeholder="Search a command, e.g. ping"
-                  className="min-w-0 flex-1 bg-transparent px-5 py-3.5 text-base outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#2457d6] placeholder:text-[#71859a]"
-                />
-
-                <button type="submit" className="border-t-2 border-[#132238] bg-[#2457d6] px-7 py-3.5 font-bold text-white transition hover:bg-[#1744b2] sm:border-l-2 sm:border-t-0">
-                  Search
-                </button>
-              </form>
-
-              {/* Browse options */}
-              <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                <a
-                  href="#environments"
-                  className="group flex items-center justify-between border-2 border-[#132238] bg-[#fff4a8] px-4 py-3 shadow-[3px_3px_0_#132238] transition hover:-translate-y-0.5 hover:shadow-[5px_5px_0_#132238]"
-                >
-                  <div>
-                    <span className="block text-[10px] font-black uppercase tracking-[0.16em] text-[#59728c]">
-                      Browse commands
-                    </span>
-
-                    <span className="mt-0.5 block font-black">
-                      By environment
-                    </span>
-
-                    <span className="mt-0.5 block text-xs text-[#59728c]">
-                      CMD · PowerShell · Bash
-                    </span>
-                  </div>
-
-                  <span className="ml-4 text-xl font-black transition group-hover:translate-y-1">
-                    ↓
-                  </span>
-                </a>
-
-                <a
-                  href="#topics"
-                  className="group flex items-center justify-between border-2 border-[#132238] bg-white px-4 py-3 shadow-[3px_3px_0_#132238] transition hover:-translate-y-0.5 hover:shadow-[5px_5px_0_#132238]"
-                >
-                  <div>
-                    <span className="block text-[10px] font-black uppercase tracking-[0.16em] text-[#59728c]">
-                      Browse commands
-                    </span>
-
-                    <span className="mt-0.5 block font-black">
-                      By topic
-                    </span>
-
-                    <span className="mt-0.5 block text-xs text-[#59728c]">
-                      Networking · Files · Systems
-                    </span>
-                  </div>
-
-                  <span className="ml-4 text-xl font-black transition group-hover:translate-y-1">
-                    ↓
-                  </span>
-                </a>
-              </div>
-
-              <p className="mt-3 text-xs font-medium text-[#59728c]">
-                Try: ping · ipconfig · Get-Process · chmod
-              </p>
-            </div>
           </div>
 
           {/* Featured Command */}
@@ -289,9 +184,9 @@ export default function Home() {
       {/* Environments */}
       <section
         id="environments"
-        className="mx-auto max-w-7xl scroll-mt-6 px-6 py-20"
+        className="mx-auto max-w-7xl scroll-mt-6 px-6 py-10 sm:py-12"
       >
-        <div className="mb-10 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+        <div className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
           <div>
             <p className="text-xs font-black uppercase tracking-[0.18em] text-[#2457d6]">
               01 / Explore
@@ -325,20 +220,20 @@ export default function Home() {
                 </span>
               </div>
 
-              <h3 className="mt-12 text-2xl font-black">
+              <h3 className="mt-6 text-2xl font-black">
                 {platform.title}
               </h3>
 
-              <p className="mt-3 min-h-20 leading-7 text-[#59728c]">
+              <p className="mt-3 leading-7 text-[#59728c]">
                 {platform.description}
               </p>
 
-              <div className="mt-7 border-t-2 border-[#132238] pt-5">
+              <div className="mt-5 border-t-2 border-[#132238] pt-5">
                 <p className="font-mono text-sm font-bold text-[#2457d6]">
                   {platform.example}
                 </p>
 
-                <p className="mt-5 text-sm font-black">
+                <p className="mt-3 text-sm font-black">
                   Browse commands
                   <span className="ml-2 inline-block transition group-hover:translate-x-2">
                     →
@@ -355,8 +250,8 @@ export default function Home() {
         id="topics"
         className="scroll-mt-6 border-y-2 border-[#132238] bg-[#f5fbff]"
       >
-        <div className="mx-auto max-w-7xl px-6 py-20">
-          <div className="mb-12 grid gap-6 lg:grid-cols-2">
+        <div className="mx-auto max-w-7xl px-6 py-10 sm:py-12">
+          <div className="mb-6 grid gap-6 lg:grid-cols-2">
             <div>
               <p className="text-xs font-black uppercase tracking-[0.18em] text-[#2457d6]">
                 02 / Learn by topic
@@ -397,11 +292,11 @@ export default function Home() {
                   </span>
                 </div>
 
-                <h3 className="mt-7 text-2xl font-black tracking-tight">
+                <h3 className="mt-5 text-2xl font-black tracking-tight">
                   {category.title}
                 </h3>
 
-                <p className="mt-3 min-h-20 leading-7 text-[#40566f]">
+                <p className="mt-3 leading-7 text-[#40566f]">
                   {category.description}
                 </p>
 
@@ -414,7 +309,7 @@ export default function Home() {
             ))}
           </div>
 
-          <div className="mt-12 border-2 border-dashed border-[#132238] bg-[#dff3ff] p-5 text-center">
+          <div className="mt-6 border-2 border-dashed border-[#132238] bg-[#dff3ff] p-5 text-center">
             <p className="font-semibold">
               More categories will be added as AstroBase grows.
             </p>
@@ -424,8 +319,8 @@ export default function Home() {
 
       {/* Popular Commands */}
       <section className="border-b-2 border-[#132238] bg-[#bfe6ff]">
-        <div className="mx-auto max-w-7xl px-6 py-16">
-          <div className="grid gap-10 lg:grid-cols-[0.65fr_1.35fr]">
+        <div className="mx-auto max-w-7xl px-6 py-10 sm:py-12">
+          <div className="grid gap-6 lg:grid-cols-[0.65fr_1.35fr]">
             <div>
               <p className="text-xs font-black uppercase tracking-[0.18em] text-[#2457d6]">
                 03 / Quick Access
@@ -463,7 +358,7 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="mx-auto flex max-w-7xl flex-col justify-between gap-4 px-6 py-10 text-sm font-semibold sm:flex-row">
+      <footer className="mx-auto flex max-w-7xl flex-col justify-between gap-4 px-6 py-6 text-sm font-semibold sm:flex-row">
         <span>AstroBase</span>
 
         <span className="text-[#59728c]">

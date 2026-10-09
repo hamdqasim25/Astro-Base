@@ -1,4 +1,5 @@
 import Link from "next/link";
+import CommandBreadcrumbs from "@/components/command-breadcrumbs";
 
 import type { Command, SyntaxTokenType } from "@/data/commands";
 import {
@@ -52,38 +53,7 @@ export default function CommandDetail({ selectedCommand }: CommandDetailProps) {
   const commandDetails = selectedCommand.details;
 
   return (
-    <main className="min-h-screen bg-[#dff3ff] text-[#132238]">
-      {/* Navigation */}
-      <header className="border-b-2 border-[#132238] bg-[#dff3ff]">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <Link href="/" className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-[#132238] bg-[#ffcf70] font-black">
-              A
-            </div>
-
-            <span className="text-xl font-black tracking-tight">
-              AstroBase
-            </span>
-          </Link>
-
-          <nav className="hidden items-center gap-8 text-sm font-semibold md:flex">
-            <Link
-              href="/commands"
-              className="transition hover:text-[#2457d6]"
-            >
-              Commands
-            </Link>
-
-            <Link
-              href="/about"
-              className="transition hover:text-[#2457d6]"
-            >
-              About
-            </Link>
-          </nav>
-        </div>
-      </header>
-
+    <main className="flex-1 bg-[#dff3ff] text-[#132238]">
       {/* Compact command header */}
       <section className="relative overflow-hidden border-b-2 border-[#132238]">
         <div
@@ -95,26 +65,13 @@ export default function CommandDetail({ selectedCommand }: CommandDetailProps) {
           }}
         />
 
-        <div className="relative mx-auto max-w-7xl px-6 py-8 sm:py-10">
-          <div className="flex flex-wrap items-center gap-2 text-sm font-black">
-            <Link
-              href="/commands"
-              className="text-[#2457d6] transition hover:-translate-x-1"
-            >
-              ← Commands
-            </Link>
+        <div className="relative mx-auto max-w-7xl px-6 py-5 sm:py-6">
+          <CommandBreadcrumbs
+            name={getEnvironmentName(selectedCommand.environment)}
+            href={`/commands/environment/${selectedCommand.environment}`}
+          />
 
-            <span className="text-[#7890a5]">/</span>
-
-            <Link
-              href={`/commands/environment/${selectedCommand.environment}`}
-              className="text-[#59728c] hover:text-[#2457d6]"
-            >
-              {getEnvironmentName(selectedCommand.environment)}
-            </Link>
-          </div>
-
-          <div className="mt-5 flex flex-col justify-between gap-5 lg:flex-row lg:items-end">
+          <div className="mt-4 flex flex-col justify-between gap-4 lg:flex-row lg:items-end">
             <div>
               <h1 className="font-mono text-5xl font-black tracking-[-0.05em] text-[#2457d6] sm:text-6xl">
                 {selectedCommand.name}
@@ -139,9 +96,9 @@ export default function CommandDetail({ selectedCommand }: CommandDetailProps) {
       </section>
 
       {commandDetails ? (
-        <div className="mx-auto grid max-w-7xl gap-7 px-6 py-8 lg:grid-cols-[minmax(0,1fr)_300px]">
+        <div className="mx-auto grid max-w-7xl gap-6 px-6 py-6 lg:grid-cols-[minmax(0,1fr)_300px]">
           {/* Main content */}
-          <div className="space-y-7">
+          <div className="space-y-6">
             {/* Overview + Syntax */}
             <section className="border-2 border-[#132238] bg-white shadow-[5px_5px_0_#132238]">
               <div className="grid gap-6 p-5 lg:grid-cols-[0.8fr_1.2fr] lg:p-6">
@@ -457,7 +414,7 @@ export default function CommandDetail({ selectedCommand }: CommandDetailProps) {
         </div>
       ) : (
         /* Command exists but full details have not been written yet */
-        <section className="mx-auto max-w-4xl px-6 py-14">
+        <section className="mx-auto max-w-4xl px-6 py-8 sm:py-10">
           <div className="border-2 border-dashed border-[#132238] bg-[#fff4a8] p-8 text-center">
             <p className="text-xs font-black uppercase tracking-[0.18em] text-[#59728c]">
               Content in progress

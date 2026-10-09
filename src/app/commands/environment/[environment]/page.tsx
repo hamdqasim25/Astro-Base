@@ -1,4 +1,5 @@
 import Link from "next/link";
+import CommandBreadcrumbs from "@/components/command-breadcrumbs";
 import { notFound } from "next/navigation";
 
 import { commands } from "@/data/commands";
@@ -66,38 +67,7 @@ export default async function EnvironmentPage({
     : environmentCommands;
 
   return (
-    <main className="min-h-screen bg-[#dff3ff] text-[#132238]">
-      {/* Navigation */}
-      <header className="border-b-2 border-[#132238] bg-[#dff3ff]">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <Link href="/" className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-[#132238] bg-[#ffcf70] font-black">
-              A
-            </div>
-
-            <span className="text-xl font-black tracking-tight">
-              AstroBase
-            </span>
-          </Link>
-
-          <nav className="hidden items-center gap-8 text-sm font-semibold md:flex">
-            <Link
-              href="/commands"
-              className="transition hover:text-[#2457d6]"
-            >
-              Commands
-            </Link>
-
-            <Link
-              href="/about"
-              className="transition hover:text-[#2457d6]"
-            >
-              About
-            </Link>
-          </nav>
-        </div>
-      </header>
-
+    <main className="flex-1 bg-[#dff3ff] text-[#132238]">
       {/* Page header */}
       <section className="relative overflow-hidden border-b-2 border-[#132238]">
         <div
@@ -109,27 +79,18 @@ export default async function EnvironmentPage({
           }}
         />
 
-        <div className="relative mx-auto max-w-7xl px-6 py-14 sm:py-16">
-          <Link
-            href="/commands"
-            className="inline-flex items-center gap-2 text-sm font-black text-[#2457d6] transition hover:-translate-x-1"
-          >
-            ← Command Library
-          </Link>
+        <div className="relative mx-auto max-w-7xl px-6 py-5 sm:py-6">
+          <CommandBreadcrumbs name={environment.name} />
 
-          <div className="mt-6 inline-flex border-2 border-[#132238] bg-[#ffcf70] px-3 py-1 text-xs font-black uppercase tracking-[0.18em]">
-            Environment
-          </div>
-
-          <h1 className="mt-5 text-5xl font-black tracking-[-0.05em] sm:text-6xl">
+          <h1 className="mt-4 text-5xl font-black tracking-[-0.05em] sm:text-6xl">
             {environment.name}
           </h1>
 
-          <p className="mt-5 max-w-2xl text-base leading-7 text-[#40566f]">
+          <p className="mt-3 max-w-2xl text-base leading-7 text-[#40566f]">
             {environment.description}
           </p>
 
-          <p className="mt-5 font-mono text-sm font-bold text-[#59728c]">
+          <p className="mt-3 font-mono text-sm font-bold text-[#59728c]">
             {environmentCommands.length}{" "}
             {environmentCommands.length === 1 ? "command" : "commands"} in this
             environment
@@ -139,7 +100,7 @@ export default async function EnvironmentPage({
 
       {/* Difficulty filter */}
       <section className="border-b-2 border-[#132238] bg-[#f5fbff]">
-        <div className="mx-auto max-w-7xl px-6 py-8">
+        <div className="mx-auto max-w-7xl px-6 py-5">
           <p className="mb-3 text-xs font-black uppercase tracking-[0.18em] text-[#59728c]">
             Filter by difficulty
           </p>
@@ -178,8 +139,8 @@ export default async function EnvironmentPage({
       </section>
 
       {/* Command results */}
-      <section className="mx-auto max-w-7xl px-6 py-14">
-        <div className="mb-8 flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
+      <section className="mx-auto max-w-7xl px-6 py-6 sm:py-8">
+        <div className="mb-5 flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
           <div>
             <p className="text-xs font-black uppercase tracking-[0.18em] text-[#2457d6]">
               Results
@@ -206,7 +167,7 @@ export default async function EnvironmentPage({
                 href={`/commands/${command.environment}/${command.slug}`}
                 className="group border-2 border-[#132238] bg-white transition hover:-translate-y-1 hover:shadow-[6px_6px_0_#132238]"
               >
-                <div className="grid gap-5 p-5 sm:grid-cols-[55px_1fr_auto] sm:items-center sm:p-6">
+                <div className="grid gap-4 p-4 sm:grid-cols-[55px_1fr_auto] sm:items-center sm:p-5">
                   <span className="hidden font-mono text-xs font-black text-[#7890a5] sm:block">
                     {String(index + 1).padStart(2, "0")}
                   </span>
@@ -220,7 +181,7 @@ export default async function EnvironmentPage({
                       {command.description}
                     </p>
 
-                    <div className="mt-4 flex flex-wrap gap-2">
+                    <div className="mt-3 flex flex-wrap gap-2">
                       {command.categories.map((category) => (
                         <span
                           key={category}
@@ -272,7 +233,7 @@ export default async function EnvironmentPage({
 
       {/* Footer */}
       <footer className="border-t-2 border-[#132238]">
-        <div className="mx-auto flex max-w-7xl flex-col justify-between gap-4 px-6 py-10 text-sm font-semibold sm:flex-row">
+        <div className="mx-auto flex max-w-7xl flex-col justify-between gap-4 px-6 py-6 text-sm font-semibold sm:flex-row">
           <span>AstroBase</span>
 
           <span className="text-[#59728c]">
