@@ -22,7 +22,27 @@ function getDifficultyName(slug: string) {
   );
 }
 
-export default function CommandsPage() {
+type CommandsPageProps = {
+  searchParams: Promise<{
+    q?: string | string[];
+  }>;
+};
+
+export default async function CommandsPage({ searchParams }: CommandsPageProps) {
+  const { q } = await searchParams;
+  const query = (Array.isArray(q) ? q[0] : q) ?? "";
+  const searchTerm = query.trim().toLowerCase();
+  const filteredCommands = commands.filter((command) =>
+    [
+      command.name,
+      command.description,
+      command.environment,
+      getEnvironmentName(command.environment),
+      ...command.categories,
+      ...command.categories.map(getCategoryName),
+    ].some((value) => value.toLowerCase().includes(searchTerm)),
+  );
+
   return (
     <main className="min-h-screen bg-[#dff3ff] text-[#132238]">
       {/* Navigation */}
@@ -108,24 +128,33 @@ export default function CommandsPage() {
         <div className="mx-auto max-w-7xl px-6 py-10">
           {/* Search */}
           <div>
-            <p className="mb-2 text-xs font-black uppercase tracking-[0.18em] text-[#59728c]">
+            <label htmlFor="command-search" className="mb-2 block text-xs font-black uppercase tracking-[0.18em] text-[#59728c]">
               Search library
-            </p>
+            </label>
 
-            <div className="flex max-w-3xl flex-col border-2 border-[#132238] bg-white shadow-[4px_4px_0_#132238] sm:flex-row">
+            <form action="/commands" method="get" role="search" className="flex max-w-3xl flex-col border-2 border-[#132238] bg-white shadow-[4px_4px_0_#132238] sm:flex-row">
               <input
-                type="text"
+                key={query}
+                id="command-search"
+                name="q"
+                type="search"
+                defaultValue={query}
                 placeholder="Search commands, e.g. ping, chmod, Get-Process..."
-                className="min-w-0 flex-1 bg-transparent px-5 py-4 outline-none placeholder:text-[#71859a]"
+                className="min-w-0 flex-1 bg-transparent px-5 py-4 outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#2457d6] placeholder:text-[#71859a]"
               />
 
               <button
-                type="button"
+                type="submit"
                 className="border-t-2 border-[#132238] bg-[#2457d6] px-8 py-4 font-black text-white transition hover:bg-[#1744b2] sm:border-l-2 sm:border-t-0"
               >
                 Search
               </button>
-            </div>
+            </form>
+            {query && (
+              <Link href="/commands" className="mt-4 inline-block text-sm font-black text-[#2457d6] underline">
+                Clear search
+              </Link>
+            )}
           </div>
 
           {/* Environment filters */}
@@ -173,21 +202,29 @@ export default function CommandsPage() {
         <div className="mb-8 flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
           <div>
             <p className="text-xs font-black uppercase tracking-[0.18em] text-[#2457d6]">
-              All commands
+              {searchTerm ? "Search results" : "All commands"}
             </p>
 
-            <h2 className="mt-2 text-4xl font-black tracking-tight">
-              Explore the library.
+            <h2 className="mt-2 break-words text-4xl font-black tracking-tight">
+              {searchTerm ? `Results for “${query.trim()}”` : "Explore the library."}
             </h2>
           </div>
 
           <p className="text-sm font-semibold text-[#59728c]">
-            {commands.length} commands
+            {filteredCommands.length} {filteredCommands.length === 1 ? "command" : "commands"}
           </p>
         </div>
 
         <div className="grid gap-4">
-          {commands.map((command, index) => (
+          {filteredCommands.length === 0 && (
+            <div className="border-2 border-dashed border-[#132238] bg-[#fff4a8] p-8 text-center">
+              <h3 className="text-xl font-black">No commands found.</h3>
+              <p className="mt-2 text-sm text-[#59728c]">
+                Try another command name, description, environment or category, or clear your search to browse all commands.
+              </p>
+            </div>
+          )}
+          {filteredCommands.map((command, index) => (
             <Link
               key={`${command.environment}-${command.slug}`}
               href={`/commands/${command.environment}/${command.slug}`}

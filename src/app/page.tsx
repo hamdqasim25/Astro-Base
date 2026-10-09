@@ -155,21 +155,23 @@ export default function Home() {
 
             {/* Search area */}
             <div className="mt-7 max-w-2xl">
-              <p className="mb-2 text-xs font-black uppercase tracking-[0.18em] text-[#59728c]">
+              <label htmlFor="command-search" className="mb-2 block text-xs font-black uppercase tracking-[0.18em] text-[#59728c]">
                 Find a command
-              </p>
+              </label>
 
-              <div className="flex flex-col border-2 border-[#132238] bg-white shadow-[4px_4px_0_#132238] sm:flex-row">
+              <form action="/commands" method="get" role="search" className="flex flex-col border-2 border-[#132238] bg-white shadow-[4px_4px_0_#132238] sm:flex-row">
                 <input
-                  type="text"
+                  id="command-search"
+                  name="q"
+                  type="search"
                   placeholder="Search a command, e.g. ping"
-                  className="min-w-0 flex-1 bg-transparent px-5 py-3.5 text-base outline-none placeholder:text-[#71859a]"
+                  className="min-w-0 flex-1 bg-transparent px-5 py-3.5 text-base outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#2457d6] placeholder:text-[#71859a]"
                 />
 
-                <button className="border-t-2 border-[#132238] bg-[#2457d6] px-7 py-3.5 font-bold text-white transition hover:bg-[#1744b2] sm:border-l-2 sm:border-t-0">
+                <button type="submit" className="border-t-2 border-[#132238] bg-[#2457d6] px-7 py-3.5 font-bold text-white transition hover:bg-[#1744b2] sm:border-l-2 sm:border-t-0">
                   Search
                 </button>
-              </div>
+              </form>
 
               {/* Browse options */}
               <div className="mt-4 grid gap-3 sm:grid-cols-2">
