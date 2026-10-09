@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">AstroBase moon logo</title>
+  <desc id="desc">White moon with grey craters, a navy outline, a cobalt orbit and a golden star.</desc>
+  <!-- Back half of the orbital ring -->
+  <path d="M332 103 C430 76 482 104 468 159 C462 185 443 209 419 230" fill="none" stroke="#3F5CF5" stroke-width="18" stroke-linecap="round"/>
+  <!-- Moon -->
+  <circle cx="255" cy="257" r="171" fill="#FFFFFF" stroke="#172238" stroke-width="11"/>
+  <circle cx="175" cy="204" r="42" fill="#CDD2DB"/>
+  <circle cx="266" cy="143" r="19" fill="#D7DAE1"/>
+  <circle cx="218" cy="307" r="31" fill="#D7DAE1"/>
+  <circle cx="334" cy="346" r="33" fill="#CDD2DB"/>
+  <circle cx="356" cy="233" r="20" fill="#D7DAE1"/>
+  <!-- Front half of the orbital ring; the sweep conceals part of the moon outline -->
+  <path d="M87 314 C56 350 62 377 96 387 C164 410 326 347 412 275 C439 252 456 232 468 205" fill="none" stroke="#3F5CF5" stroke-width="19" stroke-linecap="round"/>
+  <!-- Golden star in the upper-right gap between moon and orbit -->
+  <path d="M429 137 C435 160 442 167 462 174 C442 181 435 188 429 211 C423 188 416 181 396 174 C416 167 423 160 429 137Z" fill="#FFBE26"/>
+  <path d="M429 154 C433 167 438 171 449 174 C438 178 433 183 429 195 C425 183 420 178 409 174 C420 171 425 167 429 154Z" fill="#FFE07B"/>
+</svg>

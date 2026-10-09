@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Suspense } from "react";
 import BrowseMenu from "@/components/browse-menu";
 import NavbarSearch, { SearchForm } from "@/components/navbar-search";
@@ -8,7 +9,13 @@ export default function Navbar() {
     <header className="relative z-20 border-b-2 border-[#132238] bg-[#dff3ff] text-[#132238]">
       <nav aria-label="Main navigation" className="mx-auto grid max-w-7xl grid-cols-[1fr_auto] items-center gap-3 px-4 py-3 sm:px-6 lg:grid-cols-[auto_minmax(0,1fr)_auto] lg:gap-8">
         <Link href="/" className="flex w-fit items-center gap-2">
-          <span aria-hidden="true" className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-[#132238] bg-[#ffcf70] font-black">A</span>
+          <Image
+            src="/astrobase-moon.svg"
+            alt=""
+            width={40}
+            height={40}
+            className="h-9 w-9 shrink-0 sm:h-10 sm:w-10"
+          />
           <span className="text-lg font-black tracking-tight sm:text-xl">AstroBase</span>
         </Link>
 
