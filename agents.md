@@ -65,17 +65,19 @@ The application currently contains:
 - Environment/category navigation
 - Command filtering
 - Dynamic command detail routes
-- Initial command detail implementation
+- Six documented commands with reusable detail rendering, syntax colours and legend
+- Shared navbar with GET search, Browse, moon logo and matching favicon
+- About page and Formspree support form
 - AstroBase blueprint-inspired visual design
 
-Command pages are intended to become data-driven.
+Command pages are data-driven. Types and content live in `src/data/commands.ts`; taxonomy and slug types live in `src/data/filters.ts`.
 
-The long-term pattern should be approximately:
+The implemented pattern is:
 
 ```text
 Structured command data
         ↓
-Command lookup by slug
+Command lookup by environment and slug
         ↓
 Dynamic Next.js route
         ↓
@@ -84,26 +86,21 @@ Reusable command detail UI
 
 Do not create an individual hard-coded page for every command.
 
-Commands should eventually be added primarily by adding structured command data.
+Add commands primarily through structured data, not individual pages. See the [data model](docs/command-data-model.md).
 
 ---
 
 ## 4. Current Development Priority
 
-The immediate development priority is converting the command system into a reusable, data-driven architecture.
+As of 10 October 2026, the initial data-driven library, search, navigation, branding, About and Support pages are implemented. The owner has confirmed a real Formspree submission. See the [progress report](docs/progress-report.md) for verification and remaining work.
 
-The expected direction is:
+The next priorities are:
 
-1. Define a structured TypeScript command data model.
-2. Store command information centrally.
-3. Retrieve commands using their slug.
-4. Render them through reusable command-detail components.
-5. Allow new commands to be added without creating new pages.
-6. Expand the command library across CMD, PowerShell, and Bash.
-7. Implement syntax colour coding.
-8. Implement the syntax colour legend/key.
-9. Improve searching and filtering.
-10. Continue UI/UX refinement.
+1. Complete manual mobile and responsive testing.
+2. Add contextual “Report an issue” links to command pages.
+3. Expand the library towards approximately 25–30 commands.
+4. Improve test coverage and accessibility where necessary.
+5. Prepare the first public deployment.
 
 When working on a task, avoid unnecessarily implementing later roadmap features unless specifically requested.
 
@@ -264,7 +261,7 @@ unless there is a genuine reason it cannot reasonably be avoided.
 
 Prefer explicit domain types and interfaces for structured AstroBase data.
 
-For example, command data should eventually follow a well-defined model rather than loosely structured objects.
+Preserve the existing typed command model rather than introducing loosely structured objects.
 
 Type definitions should help prevent invalid command content from entering the application.
 
@@ -307,7 +304,7 @@ A component used once does not automatically need to become a generic component.
 
 Command information is a core part of AstroBase.
 
-The command model should be capable of representing information such as:
+The current model represents the following through metadata, overview, syntax tokens, options and examples. Not every concept is a separate field:
 
 ```text
 Command
@@ -343,7 +340,7 @@ get-process
 ls
 ```
 
-Routes should use the slug to locate the appropriate command data.
+Routes use the environment and slug together to locate command data. Preserve unique environment/slug pairs.
 
 Command display names do not have to be identical to their URL slug.
 
@@ -374,9 +371,9 @@ Descriptions should explain concepts in beginner-friendly language without sacri
 
 # 10. Syntax Colour Coding
 
-Syntax colour coding is a core planned AstroBase feature.
+Syntax colour coding and a visible legend are implemented in the shared command detail renderer.
 
-Command syntax/examples should eventually visually distinguish concepts such as:
+Manually authored syntax tokens distinguish concepts such as:
 
 - Command / cmdlet
 - Flags
@@ -392,11 +389,11 @@ Command syntax/examples should eventually visually distinguish concepts such as:
 
 A visible legend/key should explain what the colours mean.
 
-When implementing this feature, avoid hard-coding styling separately into every command.
+When extending this feature, reuse the existing token types and renderer rather than hard-coding styling separately into every command.
 
 The syntax system should be reusable and consistent across supported environments.
 
-Do not implement syntax highlighting prematurely during unrelated tasks.
+Do not redesign syntax highlighting during unrelated tasks.
 
 ---
 
@@ -479,13 +476,14 @@ The syntax colour system must therefore use both visual styling and understandab
 
 Search and filtering are important parts of the command library.
 
-Future implementations should allow commands to be discovered through information such as:
+The existing GET search at `/commands?q=...` supports case-insensitive partial matches on:
 
 - Command name
+- Description
 - Environment
 - Category
-- Difficulty
-- Relevant keywords
+
+Environment and category matching includes slugs and display names. Difficulty is a separate filter on environment/category pages. The current model has no keywords field; full detail text is not searched. Preserve query retention, clearing and empty states.
 
 Filtering logic should use structured command data rather than duplicating command metadata inside UI components.
 
@@ -523,6 +521,8 @@ npm run build
 ```
 
 If the repository has relevant automated tests, run them as well.
+
+Support helper tests currently run with `node --test tests/support-form.test.mjs` on Node.js 24.x. There is no `npm test` script. The production build includes TypeScript checking. See the [README](README.md#testing-and-verification) for setup and verification commands.
 
 Do not claim that checks passed unless they were actually executed successfully.
 

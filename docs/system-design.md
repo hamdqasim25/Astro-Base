@@ -1,318 +1,98 @@
-# Stage 2 — Application Planning & System Design
+# Application Architecture & System Design
 
-This stage defines the structure, scope, navigation, and initial architecture for AstroBase before development begins.
-
-The goal is to ensure the application has a clear V1 direction and that each core feature is planned before implementation.
-
----
+Updated **10 October 2026**. This document began as the Stage 2 application plan; it now describes the implemented working tree. The original content-first principle remains. See the [progress report](progress-report.md) for milestones and remaining work.
 
 ## V1 Scope
 
-The following features are confirmed as required for the first version of AstroBase:
+Implemented: landing page, command library, environment/category listings, dynamic command details, global search, difficulty filtering on environment/category listings, syntax colours and legend, examples and output explanations, shared navigation, About and Support.
 
-- Public landing page
-- Windows CMD command library
-- PowerShell command library
-- Linux Bash command library
-- Individual command pages
-- Global command search
-- Category filtering
-- Syntax colour coding
-- Syntax colour legend
-- Command descriptions
-- Syntax examples
-- Parameter, flag, and option explanations
-- Practical IT examples
-- Realistic expected output
-- Explanation of important output fields
-- Related commands
-- Responsive desktop and mobile design
-
-Features such as user accounts, favourites, quizzes, progress tracking, troubleshooting flows, and wider Cloud, DevOps, and Security content are planned for future versions.
-
----
+The library contains six commands across Windows CMD, PowerShell and Linux Bash. Responsive styles exist, but comprehensive device and accessibility testing remains outstanding. Accounts, favourites, quizzes, learning progress and interactive troubleshooting are future features.
 
 ## Landing Page & Navigation
 
-The landing page will act as the main entry point into AstroBase.
+The server-rendered root [layout](../src/app/layout.tsx) includes the shared [navbar](../src/components/navbar.tsx) on every route:
 
-Users will be able to browse the command library in three main ways:
+- Moon SVG and separate HTML AstroBase wordmark linking home.
+- GET search targeting `/commands`, with URL query preservation on results.
+- Browse dropdown populated from [filter definitions](../src/data/filters.ts).
+- Commands, About and Support links.
 
-- Search directly for a command
-- Browse by shell
-- Browse by category
+The landing page retains its hero, command specimen and environment/topic cards. Search and Browse are not duplicated in page content.
 
-### Browse by Shell
+Browse opens on click/tap, not hover. It closes on repeat click, link selection, outside pointer/focus activity or Escape. The button exposes expanded state and controls; arrow keys, Home/End and native Tab navigation support keyboard use. Escape returns focus to the trigger. Desktop controls align horizontally; mobile rows keep controls within the viewport.
 
-The three initial shell libraries are:
+The transparent [public moon SVG](../public/astrobase-moon.svg) displays at 36px on mobile and 40px at larger breakpoints. [App Router icon.svg](../src/app/icon.svg) supplies the matching favicon. The wordmark remains HTML.
 
-- Windows CMD
-- PowerShell
-- Linux Bash
+### Browse by Environment and Category
 
-### Browse by Category
-
-Commands will also be grouped into categories such as:
-
-- Networking
-- Files & Directories
-- System Information
-- Processes
-- Services
-- Users & Permissions
-- Disk & Storage
-- Security & Permissions
-- Package Management
-- Text Processing
-- System Management
-
-This allows users to find commands even if they do not already know which shell contains them.
-
----
+Environment slugs are `cmd`, `powershell` and `bash`. Category slugs are `networking`, `files`, `system`, `processes`, `users` and `troubleshooting`. Longer landing-card titles are presentation text, not additional routes.
 
 ## Command Listing Pages
 
-Selecting either a shell or category will open a command listing page.
+Library search uses the trimmed, lowercased `q` URL parameter. It compares substrings against names, descriptions, environment slugs/names and category slugs/names. Empty queries show all commands; repeated `q` parameters use the first value. Results include a clear action and no-results state.
 
-Each command will initially be shown in a brief format containing:
-
-- Command name
-- Shell
-- Category
-- Short description
-
-Example:
-
-```text
-ipconfig
-
-CMD | Networking
-
-Displays and manages TCP/IP network configuration information.
-```
-
-Clicking a command opens its full command reference page.
-
-Category pages can contain commands from multiple shells.
-
-For example, the **Networking** category could include:
-
-```text
-ipconfig
-CMD | Networking
-
-ping
-CMD | Networking
-
-Test-Connection
-PowerShell | Networking
-
-Get-NetIPAddress
-PowerShell | Networking
-
-ip
-Bash | Networking
-
-ss
-Bash | Networking
-```
-
----
+There is no keyword/tag field, fuzzy search, external search service or search of full detail text. Difficulty is a separate URL filter on environment/category pages, not a searched field. Listings link to the reusable detail route; unknown route identifiers return `notFound()`.
 
 ## Individual Command Pages
 
-Each command will use a consistent page structure.
+The [detail component](../src/components/command-detail.tsx) renders overview, tokenised syntax and legend, optional options, practical examples, optional outputs and explanations, and related links. Examples use native disclosure elements. All six commands have details, although the model and renderer permit missing details.
 
-A full command page will contain:
-
-```text
-Command Name
-Shell • Category
-
-Description
-
-Syntax
-
-Syntax Colour Legend
-
-Parameters / Flags / Options
-
-Practical Examples
-
-Expected Output
-
-Output Explanation
-
-Related Commands
-```
-
-This page structure will be reusable across CMD, PowerShell, and Bash commands.
-
----
+The shared [breadcrumbs](../src/components/command-breadcrumbs.tsx) present `← Commands / <name>` on detail, environment and category pages. Headers use compact spacing and consistent alignment while preserving the blueprint design.
 
 ## Application Architecture
 
-AstroBase V1 will use a simple content-driven architecture.
-
 ```text
-                  User
-                    │
-                    ▼
-            AstroBase Landing Page
-                    │
-         ┌──────────┼──────────┐
-         │          │          │
-       Search     Shell     Category
-         │          │          │
-         └──────────┼──────────┘
-                    │
-                    ▼
-             Command Listings
-                    │
-                    ▼
-            Individual Command
-                    │
-                    ▼
-             Command Data Layer
-                    │
-                    ▼
-           TypeScript Data Files
+src/data/filters.ts       src/data/commands.ts
+       |                         |
+       +---- listings/search ----+
+                                 |
+              lookup by environment + command slug
+                                 |
+            /commands/[environment]/[command]
+                                 |
+                    reusable CommandDetail
 ```
 
-For V1, command content will be stored using structured TypeScript data rather than a database.
+Pages and the navbar are Server Components. Client behaviour is isolated to `NavbarSearch` (URL-aware input), `BrowseMenu` (disclosure) and `SupportForm` (validation/submission). Search uses GET navigation rather than client-side result state, with a Suspense fallback in the navbar.
 
-This keeps the initial architecture simple while still allowing PostgreSQL and Prisma to be introduced later when database-backed features become necessary.
+Command data/types live in [commands.ts](../src/data/commands.ts); taxonomy and derived slug types live in [filters.ts](../src/data/filters.ts). There is no database or ORM. Landing-page teasers and related-link metadata are separately authored presentation data; not every teaser command has a detail entry.
 
----
+## About and Support
+
+[About](../src/app/about/page.tsx) covers project purpose, features, learning approach, background and future roadmap.
+
+[Support](../src/app/support/page.tsx) passes the public Formspree endpoint to a client form for bugs, feedback, suggestions and documentation corrections. Description and type are required; email and page URL are optional.
+
+[Support helpers](../src/lib/support-form.ts) validate input and send JSON directly from the browser to Formspree. There is no AstroBase API route or ticket backend. The submission includes a `_gotcha` honeypot. A request lock and disabled controls prevent concurrent submissions. Status messages cover success, service errors, rate limits, network failures and a 20-second timeout. Inputs reset only after success.
+
+Fields have labels, inline errors, focus on the first invalid field and status announcements. A privacy notice links to Formspree's policy. Missing/invalid configuration shows an unavailable state. The optional URL is entered manually; contextual issue links and automatic prefilling are not implemented.
+
+See [README setup](../README.md#support-form-configuration) for configuration and test submissions. The owner confirmed a real submission; full browser accessibility verification remains separate.
 
 ## Navigation Structure
 
-The planned application routes are:
-
 ```text
 /
-├── commands/
-│   ├── cmd/
-│   ├── powershell/
-│   └── bash/
-│
-├── categories/
-│   └── [category]/
-│
-├── commands/[shell]/[command]/
-│
-└── about/
+/commands
+/commands/environment/[environment]
+/commands/category/[category]
+/commands/[environment]/[command]
+/about
+/support
 ```
 
-Example routes:
+Examples: `/commands/environment/powershell`, `/commands/category/networking`, `/commands/cmd/ipconfig`, `/commands/powershell/get-process`, `/commands/bash/chmod`. Earlier planned `/categories/...` and `/commands/cmd` listing routes are not implemented routes.
 
-```text
-/commands/cmd
-/commands/powershell
-/commands/bash
+## Project Structure
 
-/categories/networking
-/categories/system-information
-
-/commands/cmd/ipconfig
-/commands/powershell/get-process
-/commands/bash/grep
-```
-
----
-
-## Initial Project Structure
-
-The initial AstroBase source structure is planned as:
-
-```text
-src/
-│
-├── app/
-│   ├── page.tsx
-│   │
-│   ├── commands/
-│   │   ├── page.tsx
-│   │   └── [shell]/
-│   │       ├── page.tsx
-│   │       └── [command]/
-│   │           └── page.tsx
-│   │
-│   ├── categories/
-│   │   ├── page.tsx
-│   │   └── [category]/
-│   │       └── page.tsx
-│   │
-│   └── about/
-│       └── page.tsx
-│
-├── components/
-│   ├── CommandCard.tsx
-│   ├── CommandList.tsx
-│   ├── CommandSearch.tsx
-│   ├── ShellCard.tsx
-│   ├── CategoryCard.tsx
-│   ├── SyntaxBlock.tsx
-│   ├── OutputBlock.tsx
-│   └── SyntaxLegend.tsx
-│
-├── data/
-│   ├── cmd/
-│   ├── powershell/
-│   └── bash/
-│
-├── types/
-│   └── command.ts
-│
-├── lib/
-│
-└── utils/
-```
-
-This structure may change slightly during development as the project grows.
-
----
+The [README tree](../README.md#project-structure) lists current directories. Components use kebab-case filenames. There are no per-environment data directories or standalone `src/types/command.ts`; the [data model](command-data-model.md) documents the schema.
 
 ## Core Design Principle
 
-AstroBase is designed around one central command library that can be filtered in different ways.
+One structured entry supplies library results, environment/category listings and full command pages. Add content through that model rather than individual hard-coded routes. Keep client boundaries small, preserve the blueprint design, and avoid storage or architecture for unrequested future features.
 
-```text
-               Commands
-                  │
-        ┌─────────┴─────────┐
-        │                   │
-      Shell              Category
-        │                   │
- CMD / PS / Bash   Networking / Files / etc.
-```
+## Development and Verification
 
-A command should only be defined once.
+Phone testing requires the correct development host in Next.js `allowedDevOrigins`; see [LAN setup](../README.md#testing-on-a-local-network). Blocked development assets previously prevented navbar hydration on a phone. The owner confirmed Browse works on Samsung S25 Chrome after the configuration fix.
 
-The same command data can then appear in:
-
-- Shell libraries
-- Category pages
-- Search results
-- Related command sections
-- Full command pages
-
-This avoids duplicated content and creates a cleaner, more maintainable architecture.
-
----
-
-## Stage 2 Outcome
-
-Stage 2 establishes:
-
-- The confirmed V1 feature scope
-- Landing page navigation
-- Shell and category browsing
-- Command listing behaviour
-- Individual command page structure
-- V1 application architecture
-- Planned route structure
-- Initial project folder structure
-- A reusable content-first design approach
-
-The next stage focuses on defining the **Command Data Model**, which determines exactly how each AstroBase command is structured, stored, searched, filtered, and displayed.
+This verifies that interaction, not a complete responsive audit. See [verification](progress-report.md#verification) for coverage and outstanding manual work.

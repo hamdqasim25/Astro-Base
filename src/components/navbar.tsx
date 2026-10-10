@@ -26,9 +26,10 @@ export default function Navbar() {
           <BrowseMenu />
         </div>
 
-        <div className="col-start-2 row-start-1 flex items-center gap-3 text-sm font-semibold sm:gap-6 lg:col-start-3">
-          <Link href="/commands" className="hover:text-[#2457d6]">Commands</Link>
-          <Link href="/about" className="hover:text-[#2457d6]">About</Link>
+        <div className="col-span-2 row-start-3 flex flex-wrap items-center gap-x-5 text-sm font-semibold sm:col-span-1 sm:col-start-2 sm:row-start-1 sm:gap-x-6 lg:col-start-3">
+          <Link href="/commands" className="inline-flex min-h-11 items-center hover:text-[#2457d6] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#2457d6]">Commands</Link>
+          <Link href="/about" className="inline-flex min-h-11 items-center hover:text-[#2457d6] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#2457d6]">About</Link>
+          <Link href="/support" className="inline-flex min-h-11 items-center hover:text-[#2457d6] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#2457d6]">Support</Link>
         </div>
       </nav>
     </header>

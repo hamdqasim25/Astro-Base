@@ -1,347 +1,135 @@
-# 🌌 AstroBase
+# AstroBase
 
-AstroBase is a public-first IT knowledge base designed to help students, aspiring IT professionals, and support technicians quickly understand and use common system administration commands.
+AstroBase is a public-first IT knowledge base for students, aspiring IT professionals and support technicians. It explains what commands do, when to use them, how their syntax works and how to interpret their output.
 
-The platform will initially focus on **Windows Command Prompt, PowerShell, and Linux Bash**, providing practical command references with clear explanations, realistic examples, and expected outputs.
+## Current Features
 
-The long-term goal is to develop AstroBase into a wider learning and troubleshooting platform covering IT Support, System Administration, Networking, Cloud, DevOps, and Cybersecurity.
+As of **10 October 2026**, the library contains **six documented commands**:
 
----
+| Environment | Commands |
+| --- | --- |
+| Windows CMD | `ping`, `ipconfig`, `tracert` |
+| PowerShell | `Get-Process` |
+| Linux Bash | `ls`, `chmod` |
 
-## 🎯 Project Goal
+- Typed command data and reusable dynamic detail pages.
+- Syntax colours and legend, option explanations, practical examples, optional output and output explanations.
+- Case-insensitive partial search by name, description, environment and category.
+- Environment/category browsing and difficulty filters on their listing pages.
+- Shared responsive navbar with search, Browse, Commands, About and Support.
+- Blueprint styling, moon SVG logo, separate HTML wordmark and matching favicon.
+- About page and Formspree support form for bugs, feedback, suggestions and documentation corrections.
 
-Technical documentation is often written for people who already understand the technology.
+## Technology Stack
 
-AstroBase aims to make IT command documentation easier to learn from by showing:
+Next.js 16.3.4 (App Router), React 19.2.8, TypeScript 5, Tailwind CSS 4 and ESLint 9. Content is stored in TypeScript; there is no database, ORM, authentication system or AstroBase ticket backend.
 
-- What a command does
-- When you would use it
-- How the syntax is structured
-- What each parameter or option means
-- A practical example
-- What the expected output looks like
-- How to interpret the important parts of that output
+## Local Development
 
-The goal is to create something that works both as a **quick reference tool** and as a **learning resource**.
+Use Node.js 24.x and npm to match the verified development environment. No Node version is enforced in `package.json`.
 
----
+```sh
+npm ci
+npm run dev
+```
 
-## ⚙️ Tech Stack
+Open `http://localhost:3000`. On Windows, use `npm.cmd` if PowerShell execution policy blocks `npm.ps1`.
 
-- **Frontend / Full Stack Framework:** Next.js
-- **Language:** TypeScript
-- **Styling:** Tailwind CSS
-- **Database:** PostgreSQL
-- **ORM / Database Toolkit:** Prisma
-- **Runtime:** Node.js
-- **Package Manager:** npm
-- **Version Control:** Git & GitHub
-- **Development Environment:** Visual Studio Code
+### Support Form Configuration
 
----
+1. Create a form in Formspree and complete its recipient/account verification.
+2. Copy its endpoint into a new `.env.local` at the repository root. There is currently no `.env.example` template.
 
-## 💻 Initial Command Libraries
+```dotenv
+NEXT_PUBLIC_FORMSPREE_ENDPOINT=https://formspree.io/f/YOUR_FORM_ID
+```
 
-AstroBase will initially contain three main command libraries:
+Replace `YOUR_FORM_ID` with your own form ID. Only HTTPS endpoints in this Formspree format are accepted. Missing or invalid configuration displays an unavailable message instead of the form.
 
-### Windows CMD
+3. Restart `npm run dev` after changing the variable. For production, configure it in the hosting environment before building; rebuild/redeploy after changes.
+4. Open `/support`, send a clearly labelled test message and confirm both the success state and receipt in your Formspree dashboard. Use non-sensitive test content.
 
-Commands commonly used for:
+The `NEXT_PUBLIC_` endpoint is visible in browser code and is not a secret API key. Keep `.env.local` uncommitted: it holds local configuration and may contain private values. It is ignored by Git. Never put passwords, tokens or private credentials into public environment variables or support submissions.
 
-- File and directory management
-- Networking
-- System information
-- User management
-- Processes and services
-- Troubleshooting
+### Testing on a Local Network
 
-Examples:
+Use `ipconfig` on Windows to find the development computer's active LAN IPv4 address. In [next.config.ts](next.config.ts), set `allowedDevOrigins` to that computer's hostname/IP, without scheme or port. Replace machine-specific entries for your setup and avoid a broad wildcard. Restart Next.js after changes.
 
-`ipconfig`  
-`ping`  
-`tracert`  
-`netstat`  
-`systeminfo`  
-`tasklist`
+```sh
+npm run dev -- --hostname 0.0.0.0
+```
 
-### PowerShell
+Connect the phone to the same network and open `http://<your-LAN-IP>:3000`. Allow the dev server through the firewall on the appropriate private network if needed. If interactive controls fail, inspect client script requests: a blocked development origin can prevent hydration even when server-rendered content loads. This setting is for development, not production access control.
 
-PowerShell commands and cmdlets used for:
+## Project Structure
 
-- Windows administration
-- System information
-- Networking
-- Services and processes
-- Users and permissions
-- Automation
-- Scripting
+```text
+src/
+  app/                 # Routes, root layout, global styles and icon.svg
+    about/             # Project introduction and roadmap
+    support/           # Feedback page
+    commands/          # Library, environment/category lists and details
+  components/          # Navbar, Browse, search, breadcrumbs, details, support form
+  data/
+    commands.ts        # Command types, six entries and lookup
+    filters.ts         # Environment, category and difficulty definitions
+  lib/
+    support-form.ts    # Validation and Formspree submission
+public/
+  astrobase-moon.svg    # Reusable transparent moon logo
+tests/
+  support-form.test.mjs # Node tests for validation and submission helpers
+docs/                  # Design, data model and progress report
+```
 
-Examples:
+## Available Routes
 
-`Get-Process`  
-`Get-Service`  
-`Get-NetIPAddress`  
-`Get-ComputerInfo`  
-`Test-Connection`
+| Route | Purpose |
+| --- | --- |
+| `/` | Landing page |
+| `/commands` | Full library; search with `?q=ping` |
+| `/commands/environment/[environment]` | `cmd`, `powershell`, `bash` |
+| `/commands/category/[category]` | `networking`, `files`, `system`, `processes`, `users`, `troubleshooting` |
+| `/commands/[environment]/[command]` | Details, e.g. `/commands/cmd/ping` |
+| `/about` | Project purpose, background and future direction |
+| `/support` | Feedback form |
 
-### Linux Bash
+Environment/category lists accept `?difficulty=beginner`, `intermediate` or `advanced`. Unknown environment/category/command routes return a not-found page. The System category and Advanced difficulty currently have no commands.
 
-Linux commands covering:
+Navbar search submits a GET request to `/commands?q=...`. Results retain the query, support clearing and show an empty state. Search is server-rendered on submission; it is not autocomplete or fuzzy search.
 
-- Files and directories
-- Permissions
-- Processes
-- Networking
-- Package management
-- System monitoring
-- User administration
+## Testing and Verification
 
-Examples:
+```sh
+npm run lint
+node --test tests/support-form.test.mjs
+npm run build
+git diff --check
+```
 
-`ls`  
-`cd`  
-`chmod`  
-`grep`  
-`ps`  
-`ip`  
-`systemctl`
+The production build includes TypeScript checking. After building, `npm run start` starts the production server. There is no `npm test` script. Tests directly import TypeScript using Node's built-in support; the current configuration emits a module-type warning but the eight tests pass. Builds need network access for the configured Google fonts.
 
----
+See the [progress report](docs/progress-report.md) for verification evidence and remaining manual checks. Helper tests do not replace mobile, keyboard or screen-reader testing.
 
-## 📖 Command Pages
+## Development Status and Roadmap
 
-Each command will have its own structured reference page.
+The initial command system, navigation, branding, About and Support pages are implemented. The owner has confirmed a real Formspree submission. This describes the current working tree, including pending changes; a first public deployment remains planned.
 
-A command page will include:
+Next priorities:
 
-### Command Overview
+1. Complete manual mobile and responsive testing.
+2. Add contextual “Report an issue” links to command pages.
+3. Expand the library towards approximately 25–30 commands.
+4. Improve test coverage and accessibility where necessary.
+5. Prepare the first public deployment.
 
-A simple explanation of what the command does and when it would normally be used.
+Future work includes interactive troubleshooting flows, quizzes and learning exercises, optional accounts and favourites, and broader networking, cybersecurity, cloud and DevOps resources. These are not implemented.
 
-### Syntax
+## Project Documentation
 
-The general syntax required to use the command.
+- [System design](docs/system-design.md)
+- [Command data model](docs/command-data-model.md)
+- [Progress report and verification](docs/progress-report.md)
+- [Development instructions](agents.md)
 
-### Syntax Colour Coding
-
-Command examples will use colour coding to make different parts of the syntax easier to understand.
-
-Different colours will distinguish elements such as:
-
-- Command / Cmdlet
-- Flags / Options / Parameters
-- Arguments / Values
-- File paths
-- Pipes and operators
-- Variables
-- Comments
-
-A visible **syntax colour legend** will explain what each colour represents.
-
-### Parameters and Options
-
-Important command parameters, switches, flags, and options will be explained individually.
-
-### Practical Example
-
-Each page will include a realistic example showing how the command might be used by an IT technician or system administrator.
-
-### Expected Output
-
-Where applicable, commands will include a realistic example of the expected terminal output.
-
-Important fields or lines from the output will also be explained so users understand what the results mean rather than simply copying commands.
-
----
-
-## 🔍 Search and Navigation
-
-AstroBase will be designed around fast access to information.
-
-Planned navigation features include:
-
-- Global command search
-- Filtering by operating system
-- Filtering by command category
-- Command categories
-- Related commands
-- Quick navigation between CMD, PowerShell, and Bash
-
----
-
-## 🧠 Learning-Focused Design
-
-AstroBase is not intended to simply provide commands to copy and paste.
-
-The platform will focus on helping users understand:
-
-- Why a command is used
-- What each part of the command does
-- What the resulting output means
-- How commands are used in real IT environments
-
-This makes AstroBase useful for both quick troubleshooting and structured learning.
-
----
-
-## 🚀 Future Features
-
-Once the core command knowledge base is established, AstroBase could expand into additional features.
-
-Planned ideas include:
-
-### Troubleshooting Guides
-
-Interactive or step-by-step troubleshooting flows for common IT problems such as:
-
-- No internet connection
-- DNS issues
-- Slow computers
-- Account login problems
-- Printer issues
-- Network connectivity problems
-
-### Interactive Learning
-
-Learning tools could include:
-
-- Command quizzes
-- Scenario-based questions
-- Command matching exercises
-- Troubleshooting challenges
-
-### User Accounts
-
-The core knowledge base will remain publicly accessible.
-
-Optional accounts could later allow users to:
-
-- Save favourite commands
-- Track learning progress
-- Create personal command collections
-- Save notes
-
-### Additional Knowledge Areas
-
-AstroBase may eventually expand beyond command references into:
-
-- Networking
-- Windows Server
-- Active Directory
-- Microsoft 365
-- Linux administration
-- Cloud computing
-- Azure
-- AWS
-- DevOps
-- Git
-- Docker
-- Cybersecurity
-- Automation and scripting
-
----
-
-## 🛠️ Development Status
-
-AstroBase is currently in the **application foundation and command knowledge base stage**.
-
-### Completed
-
-- Initial project concept
-- Core project goals
-- Initial feature planning
-- CMD, PowerShell, and Bash identified as the first command libraries
-- Command page structure planned
-- Syntax colour coding system planned
-- Syntax colour legend planned
-- Expected command output examples added as a core requirement
-- Initial future feature roadmap
-- GitHub repository created and project connected to version control
-- Next.js application created with TypeScript and Tailwind CSS
-- Initial application structure created
-- AstroBase landing page designed and implemented
-- Command library page created
-- Central filter configuration created for environments, categories, and difficulty levels
-- Central command data structure created
-- Environment filtering implemented for CMD, PowerShell, and Bash
-- Category filtering implemented
-- Commands can belong to multiple categories
-- Difficulty filtering implemented as a secondary filter
-- Dynamic routing implemented for individual command pages
-- Reusable command page layout created
-- `ping` created as the first complete command reference
-- Syntax colour coding implemented
-- Syntax colour legend implemented
-- Command options and flags section implemented
-- Practical command examples implemented
-- Expected output examples implemented
-- Output explanations implemented
-- Related command navigation implemented
-- Command page layout redesigned for compact, quick-reference use
-
-### Currently Working On
-
-- Expanding the initial command knowledge base
-- Refining the reusable command page structure
-- Preparing the command library search functionality
-- Improving navigation between command pages and filters
-
-### Next
-
-- Implement functional command search
-- Add full command data for `ipconfig`
-- Add full command data for `tracert`
-- Add full command data for `Get-Process`
-- Add full command data for `ls`
-- Add full command data for `chmod`
-- Continue adding CMD, PowerShell, and Bash commands
-- Refactor repeated interface elements into reusable components
-- Continue improving responsive design and accessibility
-- Review and refine command data structure as the library grows
-- Begin planning persistent data storage when required
-
----
-
-## 🗺️ Project Roadmap
-
-### Phase 1 — Planning & Design
-
-Define the project requirements, features, interface, command structure, and overall system design.
-
-### Phase 2 — Application Foundation
-
-Create the application, repository structure, navigation, layouts, and reusable components.
-
-### Phase 3 — Command Knowledge Base
-
-Build the CMD, PowerShell, and Bash command libraries and populate the first command pages.
-
-### Phase 4 — Search & Discovery
-
-Implement command search, filtering, categories, and related commands.
-
-### Phase 5 — Troubleshooting & Learning
-
-Introduce troubleshooting guides, quizzes, scenarios, and interactive learning tools.
-
-### Phase 6 — Platform Expansion
-
-Expand AstroBase into wider IT areas including networking, cloud, DevOps, cybersecurity, and system administration.
-
----
-
-## 🌐 Project Vision
-
-The long-term vision for AstroBase is to become a practical IT reference platform that bridges the gap between traditional technical documentation and beginner-friendly learning resources.
-
-Instead of only telling users **what command to run**, AstroBase aims to explain:
-
-> **What it does, why you would use it, how it works, and what the result means.**
-
----
-
-## 📌 Status
-
-> 🚧 AstroBase is currently under active development.
-
-The project will evolve as new features, command libraries, troubleshooting resources, and learning tools are added.
+AstroBase aims to teach practical understanding rather than simply reproduce traditional command documentation.
