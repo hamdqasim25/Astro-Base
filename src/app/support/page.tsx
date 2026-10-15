@@ -1,12 +1,16 @@
 import type { Metadata } from "next";
 import SupportForm from "@/components/support-form";
+import { commands } from "@/data/commands";
+import { environments } from "@/data/filters";
+import { resolveCommandIssue, type SupportSearchParams } from "@/lib/command-issue";
 
 export const metadata: Metadata = {
   title: "Support & Feedback | AstroBase",
   description: "Report bugs, suggest commands and features, or share feedback about AstroBase.",
 };
 
-export default function SupportPage() {
+export default async function SupportPage({ searchParams }: { searchParams: Promise<SupportSearchParams> }) {
+  const context = resolveCommandIssue(await searchParams, commands, environments);
   return (
     <main className="flex-1 bg-[#dff3ff] text-[#132238]">
       <section className="relative overflow-hidden border-b-2 border-[#132238]">
@@ -18,7 +22,12 @@ export default function SupportPage() {
       </section>
       <div className="mx-auto max-w-7xl px-6 py-6 sm:py-8">
         <div className="max-w-2xl border-2 border-[#132238] bg-[#fffdf7] p-5 shadow-[4px_4px_0_#132238] sm:p-6">
-          <SupportForm />
+          {context && (
+            <p className="mb-5 break-words text-sm leading-6 text-[#40566f]">
+              Reporting an issue with <strong>{context.commandName}</strong> ({context.environment}).
+            </p>
+          )}
+          <SupportForm key={context?.path ?? "general"} context={context} />
         </div>
       </div>
     </main>

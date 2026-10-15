@@ -65,7 +65,9 @@ Command data/types live in [commands.ts](../src/data/commands.ts); taxonomy and 
 
 [Support helpers](../src/lib/support-form.ts) validate input and send JSON directly from the browser to Formspree. There is no AstroBase API route or ticket backend. The submission includes a `_gotcha` honeypot. A request lock and disabled controls prevent concurrent submissions. Status messages cover success, service errors, rate limits, network failures and a 20-second timeout. Inputs reset only after success.
 
-Fields have labels, inline errors, focus on the first invalid field and status announcements. A privacy notice links to Formspree's policy. Missing/invalid configuration shows an unavailable state. The optional URL is entered manually; contextual issue links and automatic prefilling are not implemented.
+Fields have labels, inline errors, focus on the first invalid field and status announcements. A privacy notice links to Formspree's policy. Missing/invalid configuration shows an unavailable state. The optional full URL is entered manually.
+
+As of 15 October 2026, command pages link to Support with encoded command-issue context. The server validates the name, environment and exact internal path against the dataset, rejecting missing, repeated, mismatched or oversized values. Valid context identifies the command, selects documentation corrections and prefills an editable description with the command, environment, internal path and report prompts. Initial defaults preserve edits during form rerenders; invalid context falls back to ordinary support. There is no subject field or change to the Formspree payload structure.
 
 See [README setup](../README.md#support-form-configuration) for configuration and test submissions. The owner confirmed a real submission; full browser accessibility verification remains separate.
 

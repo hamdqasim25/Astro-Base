@@ -19,6 +19,7 @@ As of **10 October 2026**, the library contains **six documented commands**:
 - Shared responsive navbar with search, Browse, Commands, About and Support.
 - Blueprint styling, moon SVG logo, separate HTML wordmark and matching favicon.
 - About page and Formspree support form for bugs, feedback, suggestions and documentation corrections.
+- Contextual “Report an issue” links on command pages prefill an editable support description using validated command data.
 
 ## Technology Stack
 
@@ -102,12 +103,12 @@ Navbar search submits a GET request to `/commands?q=...`. Results retain the que
 
 ```sh
 npm run lint
-node --test tests/support-form.test.mjs
+node --test tests/*.test.mjs
 npm run build
 git diff --check
 ```
 
-The production build includes TypeScript checking. After building, `npm run start` starts the production server. There is no `npm test` script. Tests directly import TypeScript using Node's built-in support; the current configuration emits a module-type warning but the eight tests pass. Builds need network access for the configured Google fonts.
+The production build includes TypeScript checking. After building, `npm run start` starts the production server. There is no `npm test` script. Tests cover support helpers and command-issue context, directly importing TypeScript using Node's built-in support; the current configuration emits a module-type warning. Builds need network access for the configured Google fonts.
 
 See the [progress report](docs/progress-report.md) for verification evidence and remaining manual checks. Helper tests do not replace mobile, keyboard or screen-reader testing.
 
@@ -118,7 +119,7 @@ The initial command system, navigation, branding, About and Support pages are im
 Next priorities:
 
 1. Complete manual mobile and responsive testing.
-2. Add contextual “Report an issue” links to command pages.
+2. Manually verify contextual command reports across desktop and mobile.
 3. Expand the library towards approximately 25–30 commands.
 4. Improve test coverage and accessibility where necessary.
 5. Prepare the first public deployment.

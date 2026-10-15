@@ -1,5 +1,11 @@
 # AstroBase Progress Report
 
+## Update — 15 October 2026
+
+Command pages now include a red “Report an issue” link below the unchanged library button, sharing its sidebar scrolling behaviour. Support validates query context against command data and prefills an editable description; invalid context falls back to the normal form. The existing optional full-URL field and Formspree integration are unchanged. All 14 helper/context tests and the production build including TypeScript passed. No live Formspree submission was sent. Desktop/mobile visual, focus and edit-preservation checks remain manual because no browser was connected. The snapshot below records the earlier state.
+
+Lint and `git diff --check` also passed. Production HTTP checks verified CMD, PowerShell and Bash report links and prefilled forms, plus ordinary, unsafe and repeated-query fallback. Source comparison confirmed the Browse button markup and sticky sidebar classes were unchanged.
+
 ## Snapshot — 10 October 2026
 
 The initial command knowledge base and navigation are implemented, with **six documented commands** verified against `src/data/commands.ts`. About and Support are implemented in the working tree, and the owner confirms a real Formspree submission works. This report includes uncommitted work; it does not imply publication or deployment.

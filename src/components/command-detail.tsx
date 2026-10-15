@@ -1,5 +1,6 @@
 import Link from "next/link";
 import CommandBreadcrumbs from "@/components/command-breadcrumbs";
+import { commandIssueHref } from "@/lib/command-issue";
 
 import type { Command, SyntaxTokenType } from "@/data/commands";
 import {
@@ -410,6 +411,12 @@ export default function CommandDetail({ selectedCommand }: CommandDetailProps) {
             >
               Browse all commands
             </Link>
+            <Link
+              href={commandIssueHref(selectedCommand)}
+              className="block border-2 border-[#132238] bg-[#b91c1c] px-4 py-3 text-center text-sm font-black text-white shadow-[3px_3px_0_#132238] transition hover:-translate-y-0.5 hover:bg-[#991b1b] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#b91c1c]"
+            >
+              Report an issue
+            </Link>
           </aside>
         </div>
       ) : (
@@ -436,6 +443,14 @@ export default function CommandDetail({ selectedCommand }: CommandDetailProps) {
             >
               Back to Command Library
             </Link>
+            <div className="mt-3">
+              <Link
+                href={commandIssueHref(selectedCommand)}
+                className="inline-block border-2 border-[#132238] bg-[#b91c1c] px-5 py-3 font-black text-white shadow-[4px_4px_0_#132238] hover:bg-[#991b1b] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#b91c1c]"
+              >
+                Report an issue
+              </Link>
+            </div>
           </div>
         </section>
       )}

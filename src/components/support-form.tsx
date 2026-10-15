@@ -1,11 +1,13 @@
 "use client";
 
 import { useRef, useState, type FormEvent } from "react";
+import type { CommandIssueContext } from "@/lib/command-issue";
 import { getFormspreeEndpoint, submissionTypes, submitSupportFeedback, validateSupportFields, type SupportErrors, type SupportFields } from "@/lib/support-form";
 
 const fieldClass = "mt-2 block min-h-11 w-full min-w-0 border-2 border-[#132238] bg-white px-3 py-2 text-base text-[#132238] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2457d6]";
 
-export default function SupportForm() {
+export default function SupportForm({ context }: { context?: CommandIssueContext }) {
+  const [initialContext] = useState(context);
   const endpoint = getFormspreeEndpoint(process.env.NEXT_PUBLIC_FORMSPREE_ENDPOINT);
   const [errors, setErrors] = useState<SupportErrors>({});
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
@@ -68,7 +70,7 @@ export default function SupportForm() {
         <legend className="sr-only">Your feedback</legend>
         <div>
           <label htmlFor="support-type" className="font-bold">Submission type (required)</label>
-          <select id="support-type" name="submissionType" required defaultValue="" className={fieldClass} aria-invalid={Boolean(errors.submissionType)} aria-describedby={errors.submissionType ? "type-error" : undefined}>
+          <select id="support-type" name="submissionType" required defaultValue={initialContext ? "Report incorrect documentation" : ""} className={fieldClass} aria-invalid={Boolean(errors.submissionType)} aria-describedby={errors.submissionType ? "type-error" : undefined}>
             <option value="" disabled>Choose a type</option>
             {submissionTypes.map((type) => <option key={type} value={type}>{type}</option>)}
           </select>
@@ -77,7 +79,7 @@ export default function SupportForm() {
         <div>
           <label htmlFor="support-description" className="font-bold">Description (required)</label>
           <p id="description-help" className="mt-1 text-sm leading-6 text-[#40566f]">Use 10–2,000 characters. For a bug, include what you did, what happened and what you expected.</p>
-          <textarea id="support-description" name="description" required minLength={10} maxLength={2000} rows={6} className={`${fieldClass} resize-y`} aria-invalid={Boolean(errors.description)} aria-describedby={`description-help${errors.description ? " description-error" : ""}`} />
+          <textarea id="support-description" name="description" required defaultValue={initialContext?.description ?? ""} minLength={10} maxLength={2000} rows={6} className={`${fieldClass} resize-y`} aria-invalid={Boolean(errors.description)} aria-describedby={`description-help${errors.description ? " description-error" : ""}`} />
           {errors.description && <p id="description-error" className="mt-2 text-sm font-bold text-[#9f1d20]">{errors.description}</p>}
         </div>
         <div>
